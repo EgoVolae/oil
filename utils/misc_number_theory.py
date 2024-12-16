@@ -63,10 +63,14 @@ def get_all_primes_up_to(n: int) -> List[int]:
     return result
 
 
-def get_all_factors(x: int) -> List[int]:
+def get_all_factors(x: int, proper=False) -> List[int]:
     """
-    Returns a list of all 
+    Returns a list of all factors of an integer
     """
+
+    if x == 1 or x == 0:
+        return []
+
     to_ret = []
     root = math.sqrt(x)
     biggest_int_less_than_root = math.floor(root)
@@ -76,6 +80,10 @@ def get_all_factors(x: int) -> List[int]:
             continue
         q = math.floor(x / i)
         to_ret.extend([i, q])
+    
+    if proper:
+        to_ret = [y for y in to_ret if y != x]
+
     return to_ret
 
 
