@@ -6,15 +6,20 @@ def get_biggest_prime_factor(x: int) -> int:
     Returns the largest prime factor of x
     """
 
-    root = math.sqrt(x)
-    biggest_int_less_than_root = math.floor(root)
-    for i in reversed(range(2, biggest_int_less_than_root)):
+    if x in (2, 3):
+        return x
 
-        if x / i != math.floor(x / i):
+    root = math.sqrt(x)
+    biggest_int_lte_sqrt = math.floor(root)
+    for i in reversed(range(2, biggest_int_lte_sqrt + 1)):
+
+        if x % i != 0:
             continue
         if lazy_is_prime(i):
-            print(i)
             return i
+    
+    ## If we get here, it means that x is prime
+    return x
 
 
 def lazy_is_prime(x: int) -> bool:
@@ -24,7 +29,7 @@ def lazy_is_prime(x: int) -> bool:
 
     root = math.sqrt(x)
     for i in range(2, math.floor(root + 1)):
-        if x / i == math.floor (x / i):
+        if x % i == 0:
             return False
     return True
 
@@ -73,18 +78,30 @@ def get_all_factors(x: int, proper=False) -> List[int]:
 
     to_ret = []
     root = math.sqrt(x)
-    biggest_int_less_than_root = math.floor(root)
-    for i in reversed(range(1, biggest_int_less_than_root)):
+    biggest_int_lte_sqrt = math.floor(root)
+    for i in reversed(range(1, biggest_int_lte_sqrt + 1)):
 
         if x / i != math.floor(x / i):
             continue
         q = math.floor(x / i)
-        to_ret.extend([i, q])
+        if i == q:
+            to_ret.extend([i])
+        else:
+            to_ret.extend([i, q])
     
     if proper:
         to_ret = [y for y in to_ret if y != x]
 
     return to_ret
 
+def get_prime_decomposition(x: int) -> List[int]:
 
+    target = x
+    prime_factors= []
+    while target > 1:
 
+        biggest_prime_factor = get_biggest_prime_factor(target)
+        prime_factors.append(biggest_prime_factor)
+        target = int(target / biggest_prime_factor)
+    
+    return sorted(prime_factors)
