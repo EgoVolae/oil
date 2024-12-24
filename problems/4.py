@@ -2,7 +2,7 @@ import math
 import numpy as np
 from itertools import product
 
-def is_palindrome(x):
+def is_palindrome(x: int):
     
     failed = False
     chars = str(x)

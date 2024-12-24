@@ -26,6 +26,8 @@ def lazy_is_prime(x: int) -> bool:
     """
     Returns a Boolean indicating whether or not x is prime
     """
+    if x == 1:
+        return False
 
     root = math.sqrt(x)
     for i in range(2, math.floor(root + 1)):
@@ -105,3 +107,48 @@ def get_prime_decomposition(x: int) -> List[int]:
         target = int(target / biggest_prime_factor)
     
     return sorted(prime_factors)
+
+def get_base_2(x: int) -> str:
+
+    highest_power_of_2_less_than_x = math.floor(math.log2(x))
+    result = ["0"] * (highest_power_of_2_less_than_x + 1)
+
+    target = x
+    for idx, power in enumerate(reversed([2 ** n for n in range(highest_power_of_2_less_than_x + 1)])):
+        
+        if target - power >= 0:
+
+            result[idx] = "1"
+
+            if target == power:
+                break
+
+            target -= power
+
+    result = "".join(result)
+
+    return result
+
+def is_palindrome(x: int = None, chars: List[str] = []):
+    
+    failed = False
+    
+    if x:
+        chars = list(str(x))
+    
+    if len(chars) % 2 == 0:
+        for i in range(0, int(len(chars) / 2)):
+            if chars[i] != chars[len(chars) - 1 - i]:
+                failed = True
+                break
+    else:
+        for i in range(0, int((len(chars) - 1) / 2)):
+            if chars[i] != chars[len(chars) - 1 - i]:
+                failed = True
+                break
+
+    return not(failed)
+
+def get_digits(x: int) -> List[str]:
+
+    return [i for i in list(str(x))]
