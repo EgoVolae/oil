@@ -1,5 +1,6 @@
 import math
 from typing import List
+import itertools
 
 def get_biggest_prime_factor(x: int) -> int:
     """
@@ -150,5 +151,18 @@ def is_palindrome(x: int = None, chars: List[str] = []):
     return not(failed)
 
 def get_digits(x: int) -> List[str]:
-
     return [i for i in list(str(x))]
+
+def get_pythagorean_triplets_up_to_x(x: int):
+
+    squares = [i ** 2 for i in range(1, x + 1)]
+
+    triplets = []
+    for x, y in itertools.product(squares, squares):
+        if abs(x - y) not in squares:
+            continue
+        triplet = {int(math.sqrt(x)), int(math.sqrt(y)), int(math.sqrt(abs(x-y)))}
+        if triplet not in triplets:
+            triplets.append(triplet)
+
+    return triplets
