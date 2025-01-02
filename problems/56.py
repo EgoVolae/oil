@@ -18,6 +18,10 @@ def __main__():
 
     answer = 0
 
+    for i, j in itertools.product(range(100), range(100)):
+        digit_sum = sum([int(y) for y in mnt.get_digits(i ** j)])
+        answer = max(answer, digit_sum)
+
     return answer
 
 answer = __main__()

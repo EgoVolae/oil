@@ -71,7 +71,7 @@ def get_all_primes_up_to(n: int) -> List[int]:
     return result
 
 
-def get_all_factors(x: int, proper=False) -> List[int]:
+def get_all_factors(x: int, proper=False, asc=False) -> List[int]:
     """
     Returns a list of all factors of an integer
     """
@@ -94,6 +94,9 @@ def get_all_factors(x: int, proper=False) -> List[int]:
     
     if proper:
         to_ret = [y for y in to_ret if y != x]
+
+    if asc:
+        to_ret = sorted(to_ret)
 
     return to_ret
 

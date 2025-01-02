@@ -18,6 +18,23 @@ def __main__():
 
     answer = 0
 
+    terms = [(3,2)]
+
+    for x in range(1, 1001):
+
+        t = terms[x - 1]
+
+        t = (t[0] + t[1], t[1])  # Adding 1 
+        t = (t[1], t[0])  # Taking reciprocal
+        t = (t[0] + t[1], t[1])  # Adding 1
+
+        terms.append(t)
+
+        if len(mnt.get_digits(t[0])) > len(mnt.get_digits(t[1])):
+            answer += 1
+
+            print(t)
+
     return answer
 
 answer = __main__()

@@ -6,8 +6,6 @@ from pathlib import Path
 from typing import Dict, List, Tuple
 import math
 from tabulate import tabulate
-import itertools
-import numpy as np
 
 import utils.misc_number_theory as mnt
 import utils.misc_utils as mu
@@ -17,6 +15,21 @@ import utils.misc_utils as mu
 def __main__():
 
     answer = 0
+    running = 0
+    x = 1
+
+    while True:
+        distinct_prime_factors = set(mnt.get_prime_decomposition(x))
+        if len(distinct_prime_factors) >= 4:
+            running += 1
+        else:
+            running = 0
+        
+        if running == 4:
+            answer = x - 3
+            break
+
+        x += 1
 
     return answer
 

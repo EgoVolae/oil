@@ -18,6 +18,13 @@ def __main__():
 
     answer = 0
 
+    for i in range(101):
+        for j in range(i + 1):
+            result = math.comb(i, j)
+
+            if result > 1_000_000:
+                answer += 1
+
     return answer
 
 answer = __main__()
