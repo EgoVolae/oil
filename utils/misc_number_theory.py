@@ -1,5 +1,5 @@
 import math
-from typing import List
+from typing import Dict, List
 import itertools
 
 def get_biggest_prime_factor(x: int) -> int:
@@ -111,6 +111,14 @@ def get_prime_decomposition(x: int) -> List[int]:
         target = int(target / biggest_prime_factor)
     
     return sorted(prime_factors)
+
+def get_next_prime(x: int) -> str:
+    
+    target = x + 1
+    while True:
+        if lazy_is_prime(target):
+            return target
+        target += 1
 
 def get_base_2(x: int) -> str:
 
