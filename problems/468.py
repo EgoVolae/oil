@@ -18,20 +18,19 @@ def __main__():
     
     answer = 0
     n = 11
-    for B in range(1, n+1):
-        for r in range(n + 1):
+    for r in range(n + 1):
+        for B in range(1, n + 1):
 
             if B == 1:
                 answer += 1
                 continue
 
             c = math.comb(n, r)
-            print(f"{r=}, {B=}, {c=}")
+            print(f"{n=}, {r=}, {B=}, {c=}")
 
             ### S_B(x) is just going to be the product of all the primes up to and including B
             ### that appear in the decomposition
             prime_decomp = mnt.get_prime_decomposition(c)
-
 
             ### Decomposition looks like [2,2,2,3,3,5,7,13,23,37] for example. If this is the decomposition for x,
             ### S_B(x) = x when B >= 37. We can sum up across all B up to x fairly easily

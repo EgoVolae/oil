@@ -22,3 +22,20 @@ def generate(c: Context, n: int):
     # Copy the template to new file
     shutil.copy2(template_path, new_file_path)
     print(f"Created {new_file_path} from {template_path}")
+
+
+
+@task
+def pb(c: Context):
+    """Adds all, commits and pushes"""
+    current_branch = c.run("git branch --show-current").stdout.strip()
+    print(f"{current_branch=}")
+
+@task
+def acp(c: Context, m: str):
+    """Adds all, commits and pushes"""
+
+    try:
+        c.run(f"git add --all; git commit -m {m}; git push")
+    except Exception as e:
+        print(e)
