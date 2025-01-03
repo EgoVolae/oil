@@ -40,11 +40,12 @@ def __main__():
                         if bytes("this", "ascii") in plaintext:
                             print(key)
 
-                            print(sum(key))
 
                             print(plaintext)
+                            answer = sum(plaintext)
+                            break
 
-    return
+    return answer 
 
 answer = __main__()
 
