@@ -64,18 +64,23 @@ def __main__():
                                 if l_6[2:] == l_1[:2]:
                                     chains.append([l_1, l_2, l_3, l_4, l_5, l_6])
     
+    print(f"Chains before removing doubles: {len(chains)}")
+    chains = [c for c in chains if len(set(c)) == len(c)]
+    print(f"Chains after removing doubles: {len(chains)}")
+
     for chain in chains:
 
-        for family in [P_3s, P_4s, P_5s, P_6s, P_7s, P_8s]:
-
-            if len(family.intersection(set(chain))) > 1:
-                break
-
-            print(f"Made it: {chain}")
-            return sum([int(x) for x in chain])
-
-
-    return answer
+        venns = [frozenset(family.intersection(set(chain))) for family in [P_3s, P_4s, P_5s, P_6s, P_7s, P_8s]]
+        
+        if frozenset() in venns:
+            continue
+        
+        if len(set(venns)) != len(venns):
+            continue
+        
+        print(chain)
+        answer = sum([int(elem) for elem in chain])
+        return answer
 
 answer = __main__()
 
