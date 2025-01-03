@@ -35,7 +35,23 @@ def pb(c: Context):
 def acp(c: Context, m: str):
     """Adds all, commits and pushes"""
 
-    try:
+    current_branch = c.run("git branch --show-current").stdout.strip()
+
+    remote_branches = [b.strip().split("/")[1] for b in c.run("git branch -r").stdout.strip().split("\n")]
+
+    if current_branch in remote_branches:
+        print(f"HERE")
         c.run(f'git add --all && git commit -m "{m}" && git push')
-    except Exception as e:
-        print(e)
+    else:
+        print(f"OVER HERE")
+        c.run(f'git add --all && git commit -m "{m}" && git push --set-upstream origin {current_branch}')
+
+    # print(current_branch)
+    # print(type(current_branch))
+
+    # print(type(remote_branches))
+    # print(len(remote_branches))
+    # print(remote_branches)
+    # try:
+    # except Exception as e:
+    #     print(f"ERROR: ")
