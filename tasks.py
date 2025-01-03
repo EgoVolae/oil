@@ -36,6 +36,6 @@ def acp(c: Context, m: str):
     """Adds all, commits and pushes"""
 
     try:
-        c.run(f"git add --all; git commit -m {m}; git push")
+        c.run(f'git add --all && git commit -m "{m}" && git push')
     except Exception as e:
         print(e)
