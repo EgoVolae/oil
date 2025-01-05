@@ -177,3 +177,9 @@ def get_pythagorean_triplets_up_to_x(x: int):
             triplets.append(triplet)
 
     return triplets
+
+def is_perfect_square(x: int) -> bool:
+    return math.sqrt(x) == int(math.sqrt(x))
+
+def is_integer(x) -> bool:
+    return math.floor(x) == int(x)
