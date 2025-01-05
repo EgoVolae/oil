@@ -213,6 +213,7 @@ def get_first_m_continued_fractions(m: int, b_gen_func: Callable) -> Tuple[Tuple
         n += 1
     
     return tuple(A_series), tuple(B_series)
+
 def is_perfect_square(x: int) -> bool:
     return math.sqrt(x) == int(math.sqrt(x))
 
