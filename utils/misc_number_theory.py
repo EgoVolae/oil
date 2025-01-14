@@ -1,5 +1,5 @@
 import math
-from typing import Dict, List
+from typing import Callable, Dict, List, Tuple
 import itertools
 
 def get_biggest_prime_factor(x: int) -> int:
@@ -177,3 +177,39 @@ def get_pythagorean_triplets_up_to_x(x: int):
             triplets.append(triplet)
 
     return triplets
+
+def get_first_m_continued_fractions(m: int, b_gen_func: Callable) -> Tuple[Tuple, Tuple]:
+
+    """
+    Returns two tuples:
+    [A_1, A_2, A_3, ..., A_m]
+    [B_1, B_2, B_3, ..., B_m]
+    , where A_m/B_m is the mth continued fraction where the b terms are given by b_gen_func
+    
+    """
+
+    b_0, b_1 = b_gen_func(0), b_gen_func(1)
+
+    A_series = [b_0, b_0 * b_1 + 1]
+    B_series = [1, b_1]
+    b_series = [b_0, b_1]
+    n = 2
+    while n < m:
+        
+        A_n_minus_1 = A_series[n - 1]
+        A_n_minus_2 = A_series[n - 2]
+        B_n_minus_1 = B_series[n - 1]
+        B_n_minus_2 = B_series[n - 2]
+
+        b_n = b_gen_func(n)
+
+        A_n = b_n * A_n_minus_1 + A_n_minus_2
+        B_n = b_n * B_n_minus_1 + B_n_minus_2
+
+        A_series.append(A_n)
+        B_series.append(B_n)
+        b_series.append(b_n)
+
+        n += 1
+    
+    return tuple(A_series), tuple(B_series)
