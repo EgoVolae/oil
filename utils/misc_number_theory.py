@@ -182,9 +182,9 @@ def get_first_m_continued_fractions(m: int, b_gen_func: Callable) -> Tuple[Tuple
 
     """
     Returns two tuples:
-    [A_1, A_2, A_3, ..., A_m]
-    [B_1, B_2, B_3, ..., B_m]
-    , where A_m/B_m is the mth continued fraction where the b terms are given by b_gen_func
+    [A_0, A_1, A_2, ..., A_{m-1}]
+    [B_0, B_1, B_2, ..., B_{m-1}]
+    , where A_{m-1}/B_{m-1} is the mth continued fraction where the b terms are given by b_gen_func
     
     """
 
@@ -219,3 +219,72 @@ def is_perfect_square(x: int) -> bool:
 
 def is_integer(x) -> bool:
     return math.floor(x) == int(x)
+
+
+class RadicalFraction:
+
+    a: int
+    b: int
+    c: int
+    d: int
+    x: int
+
+    def __init__(self, a, b, c, d, x) -> None:
+        self.a = a
+        self.b = b
+        self.c = c
+        self.d = d
+        self.x = x
+    
+    def cancel(self) -> "RadicalFraction":
+
+        if self.c != 0:
+            return self
+        
+        gcd = math.gcd(self.a, self.b, self.d)
+
+        if gcd == 1:
+            return self
+        
+        return RadicalFraction(int(self.a / gcd), int(self.b / gcd), self.c, int(self.d / gcd), self.x)
+
+    def transform(self) -> "RadicalFraction":
+        return RadicalFraction(self.b * self.c, self.a * self.x * (self.c - self.d) - self.b * self.d, 0, self.x * self.c ** 2 - self.d ** 2, self.x)
+
+    @property
+    def numerator_value(self) -> float:
+        return (self.a * math.sqrt(self.x) + self.b)
+    
+    @property
+    def denominator_value(self) -> float:
+        return (self.c * math.sqrt(self.x) + self.d)
+
+    @property
+    def value(self) -> float:
+        return self.numerator_value / self.denominator_value
+
+    @property
+    def floor(self) -> int:
+        return math.floor(self.value)
+
+    @property
+    def reciprocal(self) -> "RadicalFraction":
+        return RadicalFraction(self.c, self.d, self.a, self.b, self.x)
+
+    def to_integer_and_fraction(self) -> Tuple:
+
+        if self.c != 0:
+            print(f"Needs to be transformed")
+            raise Exception
+        
+        integer = self.floor
+
+        fraction = RadicalFraction(self.a, self.b - self.floor * self.d, self.c, self.d, self.x)
+        return (integer, fraction)
+
+    def __str__(self) -> str:
+        return f"({self.a}*sqrt({self.x}) + {self.b})/({self.c}*sqrt({self.x}) + {self.d})"
+
+    def __eq__(self, other) -> bool:
+        return self.a == other.a and self.b == other.b and self.c == other.c and self.d == other.d and self.x == other.x
+

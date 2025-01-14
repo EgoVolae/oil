@@ -19,52 +19,54 @@ def __main__():
     answer = 0
     current_max_x = 0
 
-    # print(mnt.get_prime_decomposition(649))
-    # print(mnt.get_prime_decomposition(180))
-    # print(mnt.get_prime_decomposition(335159612))
-    # print(mnt.get_prime_decomposition(42912791))
-    # print(mnt.lazy_is_prime(42912791))
-    # raise SystemExit
-    for a in range(60):
-        if a ** 2 % 60 == 1:
-            print(a)
-    raise SystemExit
+    for D in range(2, 1001):
 
-    for D in range(61, 62):
-
-        if mnt.is_perfect_square(D):
+        if int(math.sqrt(D)) == math.sqrt(D):
             continue
-        
-        print(f"Finding solution for {D=}")
 
-        permissible_mods = [a for a in range(D) if a **2 % D == 1]
-        print(permissible_mods)
+        b_series = []
+        target_frac = mnt.RadicalFraction(1, 0, 0, 1, D)
+        seen_fracs = [target_frac]
 
-        k = 1
-        found = False
         while True:
-            
-            for a in permissible_mods:
-                # x
-                y_squared = (x ** 2 - 1) / D
-                print(f"{k=},{a=},{x=}")
-                
-                if mnt.is_perfect_square(y_squared):
-                    found = True
-                    y = int(math.sqrt(y_squared))
-                    print(f"{y=}, {y_squared=}, {x=}")
-                    if x > current_max_x:
-                        answer = D
-                        current_max_x = x
-                    break
-            
-            if found:
+
+            integer, fraction = target_frac.to_integer_and_fraction()
+            recip = fraction.reciprocal
+            transformed_frac = recip.transform()
+            cancelled_frac = transformed_frac.cancel()
+            target_frac = cancelled_frac
+
+            b_series.append(integer)
+
+            if target_frac in seen_fracs:
                 break
 
-            k += 1
+            seen_fracs.append(target_frac)
 
-        # print(f"Nothing found for {x=}")
-    print(f"{current_max_x=}")
+        period = len(b_series) - 1
+        r = period - 1
+
+        def b_gen_func(x: int) -> int:
+
+            if x < len(b_series):
+                return b_series[x]
+
+            if x % period == 0:
+                return b_series[-1]
+            else:
+                return b_series[x % period]
+        
+        A_series, B_series = mnt.get_first_m_continued_fractions(2 * period + 1 + 1, b_gen_func)
+
+        continued_frac_index = r if r % 2 == 1 else 2 * r + 1
+        x, y = A_series[continued_frac_index], B_series[continued_frac_index]
+
+        print(f"{D=}, {x=}, {y=}")
+
+        if x > current_max_x:
+            answer = D
+            current_max_x = x        
+       
     return answer
 
 answer = __main__()
