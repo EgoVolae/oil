@@ -220,6 +220,68 @@ def is_perfect_square(x: int) -> bool:
 def is_integer(x) -> bool:
     return math.floor(x) == int(x)
 
+def totient(x: int) -> int:
+    """
+    Euler's totient function, phi(x) [sometimes called the phi function], is used to determine the number of positive numbers less than or equal to x which are relatively prime to x.
+    The number 1 is considered to be relatively prime to every positive number, so phi(1) = 1.
+    """
+
+    if x == 1:
+        return 1
+    
+    prime_factors = set(get_prime_decomposition(x))
+
+    non_relatively_prime_integers = set()
+
+    for y in sorted(list(set(prime_factors))):
+
+        if y == 1:
+            continue
+
+        non_relatively_prime_integers = non_relatively_prime_integers.union({
+            y * k for k in range(1, math.floor(x / y))
+        })
+    
+    return x - len(non_relatively_prime_integers) - 1
+
+def totient_fast(x: int) -> int:
+    """
+    Euler's totient function, phi(x) [sometimes called the phi function], is used to determine the number of positive numbers less than or equal to x which are relatively prime to x.
+    The number 1 is considered to be relatively prime to every positive number, so phi(1) = 1.
+    """
+
+    if x == 1:
+        return 1
+    
+    prime_factors = sorted(list(set(get_prime_decomposition(x))))
+    num_prime_factors = len(prime_factors)
+
+    num_relatively_prime_integers = 0
+    for c in range(1, num_prime_factors + 1):
+        for combo in itertools.combinations(prime_factors, c):
+            
+            combo_product = math.prod(combo)
+            f = math.floor(x / combo_product)
+            sign = 1 if c % 2 == 1 else -1
+
+            num_relatively_prime_integers += f * sign
+            
+            # print(f"{combo=}, {combo_product=}, {f=}")
+
+    return x - num_relatively_prime_integers 
+    non_relatively_prime_integers = set()
+
+    for y in sorted(list(set(prime_factors))):
+
+        if y == 1:
+            continue
+
+        non_relatively_prime_integers = non_relatively_prime_integers.union({
+            y * k for k in range(1, math.floor(x / y))
+        })
+    
+    return x - len(non_relatively_prime_integers) - 1
+
 
 class RadicalFraction:
 
