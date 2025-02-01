@@ -165,16 +165,17 @@ def get_digits(x: int) -> List[str]:
     return [i for i in list(str(x))]
 
 def get_pythagorean_triplets_up_to_x(x: int):
+    """
+    Returns all Pythogorean triplets (a,b,c) such that a <= b <= c <= x
+    """
+    squares = {i ** 2 for i in range(1, x + 1)}
 
-    squares = [i ** 2 for i in range(1, x + 1)]
-
-    triplets = []
+    triplets = set()
     for x, y in itertools.product(squares, squares):
         if abs(x - y) not in squares:
             continue
-        triplet = {int(math.sqrt(x)), int(math.sqrt(y)), int(math.sqrt(abs(x-y)))}
-        if triplet not in triplets:
-            triplets.append(triplet)
+        triplet = frozenset({int(math.sqrt(x)), int(math.sqrt(y)), int(math.sqrt(abs(x-y)))})
+        triplets.add(triplet)
 
     return triplets
 
