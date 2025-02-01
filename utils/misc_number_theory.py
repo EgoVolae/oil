@@ -220,6 +220,23 @@ def is_perfect_square(x: int) -> bool:
 def is_integer(x) -> bool:
     return math.floor(x) == int(x)
 
+def are_coprime(x: int, y: int) -> bool:
+    return math.gcd(x, y) == 1
+
+def totient(x: int) -> int:
+    """
+    Returns the totient of x
+    """
+    if x == 1:
+        return 1
+
+    prime_decomposition = get_prime_decomposition(x)
+    result = x
+    for prime in set(prime_decomposition):
+        result *= (1 - 1 / prime)
+
+    return int(result)
+
 
 class RadicalFraction:
 
