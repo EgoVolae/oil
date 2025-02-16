@@ -1,5 +1,5 @@
 import math
-from typing import Dict, List
+from typing import Callable, Dict, List, Tuple
 import itertools
 
 def get_biggest_prime_factor(x: int) -> int:
@@ -177,3 +177,131 @@ def get_pythagorean_triplets_up_to_x(x: int):
             triplets.append(triplet)
 
     return triplets
+
+def get_first_m_continued_fractions(m: int, b_gen_func: Callable) -> Tuple[Tuple, Tuple]:
+
+    """
+    Returns two tuples:
+    [A_0, A_1, A_2, ..., A_{m-1}]
+    [B_0, B_1, B_2, ..., B_{m-1}]
+    , where A_{m-1}/B_{m-1} is the mth continued fraction where the b terms are given by b_gen_func
+    
+    """
+
+    b_0, b_1 = b_gen_func(0), b_gen_func(1)
+
+    A_series = [b_0, b_0 * b_1 + 1]
+    B_series = [1, b_1]
+    b_series = [b_0, b_1]
+    n = 2
+    while n < m:
+        
+        A_n_minus_1 = A_series[n - 1]
+        A_n_minus_2 = A_series[n - 2]
+        B_n_minus_1 = B_series[n - 1]
+        B_n_minus_2 = B_series[n - 2]
+
+        b_n = b_gen_func(n)
+
+        A_n = b_n * A_n_minus_1 + A_n_minus_2
+        B_n = b_n * B_n_minus_1 + B_n_minus_2
+
+        A_series.append(A_n)
+        B_series.append(B_n)
+        b_series.append(b_n)
+
+        n += 1
+    
+    return tuple(A_series), tuple(B_series)
+
+def is_perfect_square(x: int) -> bool:
+    return math.sqrt(x) == int(math.sqrt(x))
+
+def is_integer(x) -> bool:
+    return math.floor(x) == int(x)
+
+def are_coprime(x: int, y: int) -> bool:
+    return math.gcd(x, y) == 1
+
+def totient(x: int) -> int:
+    """
+    Returns the totient of x
+    """
+    if x == 1:
+        return 1
+
+    prime_decomposition = get_prime_decomposition(x)
+    result = x
+    for prime in set(prime_decomposition):
+        result *= (1 - 1 / prime)
+
+    return int(result)
+
+
+class RadicalFraction:
+
+    a: int
+    b: int
+    c: int
+    d: int
+    x: int
+
+    def __init__(self, a, b, c, d, x) -> None:
+        self.a = a
+        self.b = b
+        self.c = c
+        self.d = d
+        self.x = x
+    
+    def cancel(self) -> "RadicalFraction":
+
+        if self.c != 0:
+            return self
+        
+        gcd = math.gcd(self.a, self.b, self.d)
+
+        if gcd == 1:
+            return self
+        
+        return RadicalFraction(int(self.a / gcd), int(self.b / gcd), self.c, int(self.d / gcd), self.x)
+
+    def transform(self) -> "RadicalFraction":
+        return RadicalFraction(self.b * self.c, self.a * self.x * (self.c - self.d) - self.b * self.d, 0, self.x * self.c ** 2 - self.d ** 2, self.x)
+
+    @property
+    def numerator_value(self) -> float:
+        return (self.a * math.sqrt(self.x) + self.b)
+    
+    @property
+    def denominator_value(self) -> float:
+        return (self.c * math.sqrt(self.x) + self.d)
+
+    @property
+    def value(self) -> float:
+        return self.numerator_value / self.denominator_value
+
+    @property
+    def floor(self) -> int:
+        return math.floor(self.value)
+
+    @property
+    def reciprocal(self) -> "RadicalFraction":
+        return RadicalFraction(self.c, self.d, self.a, self.b, self.x)
+
+    def to_integer_and_fraction(self) -> Tuple:
+
+        if self.c != 0:
+            print(f"Needs to be transformed")
+            raise Exception
+        
+        integer = self.floor
+
+        fraction = RadicalFraction(self.a, self.b - self.floor * self.d, self.c, self.d, self.x)
+        return (integer, fraction)
+
+    def __str__(self) -> str:
+        return f"({self.a}*sqrt({self.x}) + {self.b})/({self.c}*sqrt({self.x}) + {self.d})"
+
+    def __eq__(self, other) -> bool:
+        return self.a == other.a and self.b == other.b and self.c == other.c and self.d == other.d and self.x == other.x
+

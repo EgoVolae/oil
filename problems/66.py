@@ -12,18 +12,20 @@ import numpy as np
 import utils.misc_number_theory as mnt
 import utils.misc_utils as mu
 
+
 @mu.timer
 def __main__():
 
-    answer = 1  # We know that 2 has an odd period, and the code below doesn't work for 2, so we start at 3
+    answer = 0
+    current_max_x = 0
 
-    for x in range(3, 10_001):
+    for D in range(2, 1001):
 
-        if int(math.sqrt(x)) == math.sqrt(x):
+        if int(math.sqrt(D)) == math.sqrt(D):
             continue
 
-        integers = []
-        target_frac = mnt.RadicalFraction(1, 0, 0, 1, x)
+        b_series = []
+        target_frac = mnt.RadicalFraction(1, 0, 0, 1, D)
         seen_fracs = [target_frac]
 
         while True:
@@ -34,20 +36,37 @@ def __main__():
             cancelled_frac = transformed_frac.cancel()
             target_frac = cancelled_frac
 
-            integers.append(integer)
+            b_series.append(integer)
 
             if target_frac in seen_fracs:
                 break
 
             seen_fracs.append(target_frac)
 
-        period = len(integers) - 1
+        period = len(b_series) - 1
+        r = period - 1
 
-        print(f"{x=}, {period=}, {integers=}")
+        def b_gen_func(x: int) -> int:
 
-        if period % 2 == 1:
-            answer += 1
+            if x < len(b_series):
+                return b_series[x]
 
+            if x % period == 0:
+                return b_series[-1]
+            else:
+                return b_series[x % period]
+        
+        A_series, B_series = mnt.get_first_m_continued_fractions(2 * period + 1 + 1, b_gen_func)
+
+        continued_frac_index = r if r % 2 == 1 else 2 * r + 1
+        x, y = A_series[continued_frac_index], B_series[continued_frac_index]
+
+        print(f"{D=}, {x=}, {y=}")
+
+        if x > current_max_x:
+            answer = D
+            current_max_x = x        
+       
     return answer
 
 answer = __main__()
